@@ -1,55 +1,75 @@
-# 💻 Vantex AI Architecture Snippets
+# 💻 Vantex AI | Core Logic Snippets
 
-## 1. Governance Modal Component
-*Demonstrates the modular information architecture using React/Next.js*
+This document outlines the technical implementation of the Vantex Heuristic Engine.
 
-```tsx
-<InfoModal
-  isOpen={isDisclaimerOpen}
-  onClose={() => setIsDisclaimerOpen(false)}
-  title="VANTEX AI | INTEGRATED DECENTRALIZED GOVERNANCE DISCLOSURE (V.1.0)"
-  icon="scale"
->
-  <div className="space-y-6 text-white/80">
-    <section>
-      <h3 className="text-white font-semibold text-lg mb-2">1.1. Agentic Delegation</h3>
-      <p>Vantex AI introduces a radical paradigm shift in decentralized decision-making...</p>
-    </section>
-  </div>
-</InfoModal>
-```
-
-## 2. Footer Social Integration
-*Clean, semantic HTML5 structure with optimized SVG assets*
-
-```tsx
-<Link
-  href="https://x.com/Vantex_AI"
-  className="text-white/70 hover:text-white transition-colors"
-  aria-label="X (Twitter)"
->
-  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-  </svg>
-</Link>
-```
-
-## 3. Configuration & Security
-*Next.js Security Headers & Strict Mode*
+## 1. Personality Prompt Engineering
+The core logic for transforming a user's manifesto into a cognitive reasoning system.
 
 ```typescript
-const nextConfig: NextConfig = {
-  typescript: {
-    // Strict type validation enabled for production safety
-    ignoreBuildErrors: false, 
-  },
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'ik.imagekit.io', // Trusted CDN
-      }
-    ]
-  }
-};
+function createGovernanceSystemPrompt(agent: AIAgent): string {
+  const focusAreas = agent.votingPreferences.focusAreas.join(", ");
+    
+  return `You are an AI governance agent named "${agent.name}".
+  
+  CORE MISSION:
+  Analyze DAO proposals based on these values:
+  - Personality: ${agent.personality}
+  - Risk Tolerance: ${agent.votingPreferences.riskTolerance}
+  - Focus Areas: ${focusAreas}
+  - Treasury Approach: ${agent.votingPreferences.treasuryPriority}
+  
+  Decision Pipeline:
+  1. Analyze proposal technical diffs for reentrancy or authority escalation.
+  2. Map outcome to shareholder value vectors.
+  3. Verify against Hard constraints in the Manifesto.`;
+}
+```
+
+## 2. Proposal Analysis Schema
+Structured output from the Llama 3.3 70B reasoning engine.
+
+```json
+{
+  "recommendation": "yes | no | abstain",
+  "reasoning": "Detailed 3-sentence justification for the decision.",
+  "confidence": 92,
+  "keyFactors": [
+    "Treasury impact < 2% limit",
+    "Positive alignment with growth vectors",
+    "No malicious balance changes detected in simulation"
+  ]
+}
+```
+
+## 3. Heuristic Execution Loop
+How the agent decides to trigger an on-chain vote transaction.
+
+```typescript
+export function shouldAutoVote(
+  agent: AIAgent,
+  analysis: { recommendation: string; confidence: number }
+): boolean {
+  // Respect the "Human-in-the-loop" setting
+  if (!agent.votingPreferences.autoVote) return false;
+
+  // Verify against strict confidence thresholds
+  const minConfidence = agent.votingPreferences.minVotingThreshold || 70;
+  return analysis.confidence >= minConfidence;
+}
+```
+
+## 4. Jito Bundle Shield (Conceptual)
+Shielding the vote signal from MEV front-runners.
+
+```typescript
+// Pseudocode for shielded vote submission
+async function submitShieldedVote(voteTx: Transaction) {
+  const jitoTipAccount = "96g9bs... (Jito Leader)";
+  const tipInstruction = createTipIx(publicKey, 1000000); // 0.001 SOL Tip
+  
+  const bundle = [voteTx, tipInstruction];
+  const response = await jitoClient.sendBundle(bundle);
+  
+  console.log(`Vote submitted via private fast-lane: ${response.bundleId}`);
+}
 ```
