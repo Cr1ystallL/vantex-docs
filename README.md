@@ -34,18 +34,20 @@ Built on the **Solana** blockchain, Vantex AI deploys autonomous heuristic agent
 
 ---
 
-## 🚀 Getting Started
+## 🛰️ Protocol Initialization
 
-```bash
-# Clone the repository
-git clone https://github.com/Cr1ystallL222/VantexAI.git
+**Vantex AI** operates as a distributed heuristic layer. To successfully integrate a DAO into the sovereign governance network, the following parameters must be analyzed:
 
-# Install dependencies
-npm install
-
-# Run development server
-npm run dev
+```yaml
+protocol_version: "1.0.4-agentic"
+heuristic_engine: "SendAI-v2.8"
+verification_method: "Ed25519-Sovereign"
+latency_threshold: "<400ms"
+security_layer: "Jito-Bundle-Atomic"
 ```
+
+The agent logic flows through a strict **Chain-of-Thought** verification pipeline, ensuring that every governance decision is cryptographically backed by on-chain state snapshots.
+
 
 ---
 
